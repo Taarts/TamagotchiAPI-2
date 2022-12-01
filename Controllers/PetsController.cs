@@ -164,6 +164,90 @@ namespace TamagotchiAPI.Controllers
             return Ok(pet);
         }
 
+
+        [HttpPost("{id}/Playtimes")]
+        public async Task<ActionResult<Playtime>> CreatePlaytimeForPet(int id)
+        {
+            {
+                var pet = await _context.Pets.FindAsync(id);
+                if (pet == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    pet.HappinessLevel = pet.HappinessLevel + 3;
+                    pet.HungerLevel = pet.HungerLevel + 3;
+                }
+
+                Playtime playtime = new Playtime();
+                playtime.PetId = pet.Id;
+                _context.Playtimes.Add(playtime);
+                await _context.SaveChangesAsync();
+
+                return Ok(pet);
+            }
+        }
+
+
+        [HttpPost("{id}/Feedings")]
+        public async Task<ActionResult<Playtime>> MakeFeeding(int id)
+        {
+            {
+                var pet = await _context.Pets.FindAsync(id);
+
+                if (pet == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    pet.HappinessLevel = pet.HappinessLevel + 3;
+                    pet.HungerLevel = pet.HungerLevel - 3;
+                    if (pet.HungerLevel <= 0)
+                    {
+                        pet.HungerLevel = 0;
+                    }
+                }
+                Feeding feeding = new Feeding();
+                feeding.PetId = pet.Id;
+                _context.Feedings.Add(feeding);
+                await _context.SaveChangesAsync();
+
+                return Ok(pet);
+            }
+        }
+
+
+        [HttpPost("{id}/Scoldings")]
+        public async Task<ActionResult<Playtime>> MakeScolding(int id)
+        {
+            {
+                var pet = await _context.Pets.FindAsync(id);
+                if (pet == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    pet.HappinessLevel = pet.HappinessLevel - 3;
+
+                    if (pet.HappinessLevel <= 0)
+                    {
+                        pet.HappinessLevel = 0;
+                    }
+
+                }
+                Scolding scolding = new Scolding();
+                scolding.PetId = pet.Id;
+
+                _context.Scoldings.Add(scolding);
+                await _context.SaveChangesAsync();
+
+                return Ok(pet);
+            }
+        }
+
         // Private helper method that looks up an existing pet by the supplied id
         private bool PetExists(int id)
         {

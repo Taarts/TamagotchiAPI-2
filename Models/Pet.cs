@@ -24,5 +24,4 @@ namespace TamagotchiAPI.Models
         public List<Scolding> Scoldings { get; set; }
         public List<Feeding> Feedings { get; set; }
     }
-
 }
